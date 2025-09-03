@@ -10,11 +10,17 @@ public class WebConfig {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
+        String allowedOrigin = System.getenv("ALLOWED_ORIGIN");
+        if (allowedOrigin == null || allowedOrigin.isBlank()) {
+            allowedOrigin = "http://localhost:5173";
+        }
+        final String finalAllowedOrigin = allowedOrigin;
+
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOrigins(finalAllowedOrigin)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
